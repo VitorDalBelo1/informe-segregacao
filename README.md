@@ -11,7 +11,9 @@ You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw quarkus:dev
 ```
-
+```shell script
+quarkus:dev -D KAFKA_DESTINO_BOOTSTRAP=localhost:9092 -D KAFKA_DESTINO_TOPICO=TOPIC.TRANSACTION.EVENTS -D KAFKA_ORIGEM_BOOTSTRAP=localhost:9094 -D quarkus.profile=local -D KAFKA_ORIGEM_TOPICO=TOPIC.TRANSACTION.PIXE.ROW
+```
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
 
 ## Packaging and running the application
