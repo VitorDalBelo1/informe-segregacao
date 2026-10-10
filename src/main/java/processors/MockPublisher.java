@@ -1,16 +1,24 @@
 package processors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.arc.profile.UnlessBuildProfile;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.jboss.logging.Logger;
 
 import java.time.Duration;
+import java.util.List;
 
+@UnlessBuildProfile("local")
 @ApplicationScoped
 public class MockPublisher {
 
     private static final Logger LOG = Logger.getLogger(MockPublisher.class);
+
+    @Inject
+    ObjectMapper mapper;
 
     // Conteúdo hardcoded da mensagem em formato posicional
     private static final String MOCK_PIX_ESTATICO = """
@@ -42,11 +50,15 @@ public class MockPublisher {
             """.stripIndent(); // Substitua aqui pelo conteúdo real do seu arquivo posicional
 
     @Outgoing("gerador-entrada")
-    public Multi<String> publicarMockPeriodico() {
+    public Multi<List<TransacaoPagamentoEvent>> publicarMockPeriodico() {
         return Multi.createFrom().ticks().every(Duration.ofSeconds(10))
                 .onItem().transform(tick -> {
-                    LOG.infof("Publicando mock periódico #%d no tópico de entrada", tick);
-                    return MOCK_PIX_ESTATICO;
+                    try {
+                        LOG.infof("Mock local #%d enviado para o canal 'entrada'", tick);
+                        return List.of(mapper.readValue(MOCK_PIX_ESTATICO, TransacaoPagamentoEvent.class));
+                    } catch (Exception e) {
+                        throw new IllegalStateException("JSON mock inválido", e);
+                    }
                 });
     }
 }
