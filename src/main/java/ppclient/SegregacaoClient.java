@@ -1,5 +1,6 @@
 package ppclient;
 
+import dto.InfoSegFinalRequest;
 import dto.InformeSegregacaoRequest;
 import dto.PPResponse;
 import jakarta.ws.rs.Consumes;
@@ -16,4 +17,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface SegregacaoClient {
     @POST
     PPResponse inicializarSegregacao(InformeSegregacaoRequest request);
+    @POST
+    @Path("/finalizacao")
+    PPResponse finalizarSegregacao(InfoSegFinalRequest request);
 }
