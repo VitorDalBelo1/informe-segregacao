@@ -2,6 +2,7 @@ package processors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.arc.profile.IfBuildProfile;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,6 +11,7 @@ import org.jboss.logging.Logger;
 
 import java.time.Duration;
 
+@IfBuildProfile("local")
 @ApplicationScoped
 public class MockPublisher {
 
